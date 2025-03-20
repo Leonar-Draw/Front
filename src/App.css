@@ -1,0 +1,8 @@
+.stepImages {
+  opacity: 0.5; /* 50% 투명도 */
+}
+/* 스크롤 없애기 */
+html,
+body {
+  overflow: hidden;
+}
