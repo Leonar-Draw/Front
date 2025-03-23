@@ -4,15 +4,26 @@ import Button from "./Button";
 import styles from "./SubStep.module.css";
 import { Icon } from "@iconify/react";
 import arrowLeft from "@iconify-icons/mdi/arrow-left";
+import arrowRight from "@iconify-icons/mdi/arrow-right";
 
 const SubStep = () => {
   const { id, subId } = useParams();
   const navigate = useNavigate();
 
   // Step별 선 두께 설정:
-  const isStep1 = parseInt(id) === 1;
-  const lineThickness = isStep1 ? 40 : 5;
-  const matchThickness = isStep1 ? lineThickness / 2 : lineThickness;
+  const step = parseInt(id);
+  let lineThickness;
+  if (step === 1) {
+    lineThickness = 40;
+  } else if (step === 2) {
+    lineThickness = 10;
+  } else if (step === 3) {
+    lineThickness = 5;
+  } else {
+    lineThickness = 5; // 예외 처리 (필요시)
+  }
+
+  const matchThickness = step === 1 ? lineThickness / 2 : lineThickness;
 
   const canvasRef = useRef(null);
   const ctxRef = useRef(null);
@@ -34,7 +45,9 @@ const SubStep = () => {
   // drawing 상태에 따라 커서 스타일 업데이트 (그리기 모드일 때는 붓 아이콘)
   useEffect(() => {
     if (canvasRef.current) {
-      canvasRef.current.style.cursor = drawing ? "url('/images/brush handwriting.cur'), auto" : "default";
+      canvasRef.current.style.cursor = drawing
+        ? "url('/images/brush handwriting.cur'), auto"
+        : "default";
     }
   }, [drawing]);
 
@@ -275,8 +288,10 @@ const SubStep = () => {
       <h2 className={styles.subStepTitle}>
         Step {id} - {subId}
       </h2>
-      {/* 캔버스 클릭시 붓 모드로 전환되는 안내 문구 */}
-      <div className={styles.instruction}>캔버스를 응시하면 붓 모드로 전환됩니다. 한 번 응시하여 그리기를 시작하고, 다시 응시하면 종료됩니다.</div>
+      {/* 캔버스 클릭 시 붓 모드로 전환되는 안내 문구 */}
+      <div className={styles.instruction}>
+        캔버스를 응시하면 붓 모드로 전환됩니다. 한 번 응시하여 그리기를 시작하고, 다시 응시하면 종료됩니다.
+      </div>
       <div className={styles.mainArea}>
         <div className={styles.canvasWrapper}>
           <button className={styles.backButton} onClick={() => navigate(`/step/${id}`)}>
@@ -285,19 +300,48 @@ const SubStep = () => {
           <button className={styles.clearButton} onClick={clearCanvas}>
             초기화
           </button>
-          {/* 모드 표시: 캔버스 내부 우측 상단 등 원하는 위치에 표시 가능 */}
-          <div className={styles.modeIndicator}>{drawing ? "그리기 모드" : "일반 모드"}</div>
-          <canvas ref={canvasRef} className={styles.drawingCanvas} width={1000} height={600} onClick={handleCanvasClick} onMouseMove={handleMouseMove} onMouseLeave={handleCanvasMouseLeave} />
+          {/* 모드 표시: 캔버스 내부 우측 상단 */}
+          <div className={styles.modeIndicator}>
+            {drawing ? "그리기 모드" : "일반 모드"}
+          </div>
+          <canvas
+            ref={canvasRef}
+            className={styles.drawingCanvas}
+            width={1000}
+            height={600}
+            onClick={handleCanvasClick}
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleCanvasMouseLeave}
+          />
         </div>
       </div>
       <div className={styles.progressContainer}>
         <p className={styles.progressMessage}>{message}</p>
       </div>
-      <div className={styles.subStepControls}>
-        {!(id === "1" && subId === "1") && <Button text="이전으로" onClick={handlePrevStep} color="pink" />}
-        <Button text="저장하기" onClick={saveCanvas} color="pink" />
-        {!(id === "3" && subId === "12") && <Button text="다음으로" onClick={handleNextStep} color="pink" />}
+
+      {/* 이전으로 버튼: 왼쪽 중앙 (1-1인 경우 렌더링하지 않음) */}
+      <div className={styles.prevButtonWrapper}>
+        {!(id === "1" && subId === "1") && (
+          <button className={styles.prevButton} onClick={handlePrevStep}>
+            <Icon icon={arrowLeft} width="60" height="60"  />
+          </button>
+        )}
       </div>
+
+      {/* 저장하기 버튼: 왼쪽 아래 */}
+      <div className={styles.saveButtonWrapper}>
+        <Button text="저장하기" onClick={saveCanvas} color="pink" />
+      </div>
+
+      {/* 다음으로 버튼: 오른쪽 중앙 (3-12인 경우 렌더링하지 않음) */}
+      <div className={styles.nextButtonWrapper}>
+        {!(id === "1" && subId === "1") && (
+          <button className={styles.prevButton} onClick={handlePrevStep}>
+            <Icon icon={arrowRight} width="60" height="60" />
+          </button>
+        )}
+      </div>
+
       <div className={styles.webcamContainer}>
         <img src="http://localhost:5500/live_stream" className={styles.webcamFeed} />
       </div>
