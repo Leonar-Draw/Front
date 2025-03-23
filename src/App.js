@@ -1,6 +1,7 @@
 // src/App.jsx
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import None from './components/None';
 import Home from './components/Home';
 import Step from './components/Step';
 import styles from './App.module.css';
@@ -11,7 +12,8 @@ function App() {
     <Router>
       <div className={styles.App}>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path='/' element={< None />} />
+          <Route path="/Home" element={<Home />} />
           <Route path="/step/:id" element={<Step />} />
           <Route path="/step/:id/:subId" element={<SubStep />} />
         </Routes>

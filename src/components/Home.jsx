@@ -11,16 +11,17 @@ const Home = () => {
   };
 
   return (
-    <div className={styles.container}>
-      {/* 시작하기 버튼 (아래 중앙 정렬) */}
-      <button className={styles.startButton} onClick={handlePlay}>
-        시작하기
-      </button>
+    <>
+      <div className={styles.container}>
+        {/* 시작하기 버튼 (아래 중앙 정렬) */}
+        <button className={styles.startButton} onClick={handlePlay}>
+          시작하기
+        </button>
+      </div>
       <div className={styles.webcamContainer}>
         <img src="http://localhost:5500/live_stream" className={styles.webcamFeed}/>
       </div>
-    </div>
-      
+    </>
   );
 };
 
